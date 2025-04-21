@@ -1,14 +1,11 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import Optional
 import numpy as np
 import os
 from src.data_loader import generate_random_data
 from src.som.som import SelfOrganisingMap
 # from src.visualization import save_som_image
-import uvicorn
 
 app = FastAPI(title="Self-Organizing Map API")
 
@@ -32,10 +29,10 @@ class SOMRequest(BaseModel):
 
 @app.post("/run-som")
 def run_som(params: SOMRequest):
-    # Generate input data
+    # Generating input data
     data = generate_random_data(params.num_samples, params.input_dim)
 
-    # Train SOM
+    # Training SOM
     som = SelfOrganisingMap(params.width, params.height, params.input_dim)
     som.train(data, params.num_iterations)
 

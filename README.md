@@ -83,13 +83,13 @@ python -m pytest tests/
 Build Docker Image
 
 ```
-docker build -t kohonen .
+docker build -t kohonen_api .
 ```
 
 ## Run Docker Container
 
 ```
-docker run --rm kohonen
+docker run -p 3000:3000 --rm kohonen_api
 ``` 
 
 ## Key Components
