@@ -1,3 +1,10 @@
 /venv
 
 .DS_Store
+
+/__pycache__/
+*.pyc
+
+src/__pycache__/
+
+data/*
