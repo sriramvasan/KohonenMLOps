@@ -1,27 +1,51 @@
-from data_loader import generate_random_data
-from som.som import SelfOrganisingMap
-from visualization import save_som_image
-# Visualization
+from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
+from typing import Optional
+import numpy as np
 import os
-output_dir = 'data/processed'
+from src.data_loader import generate_random_data
+from src.som.som import SelfOrganisingMap
+# from src.visualization import save_som_image
+import uvicorn
 
-def main():
-    # Parameters
-    width, height = 10, 10
-    input_dim = 3
-    num_samples = 10
-    num_iterations = 100
+app = FastAPI(title="Self-Organizing Map API")
 
-    # Data generation
-    data = generate_random_data(num_samples, input_dim)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    # SOM initialization and training
-    som = SelfOrganisingMap(width, height, input_dim)
-    som.train(data, num_iterations)
-    
-    os.makedirs(output_dir, exist_ok=True)
-    filepath = os.path.join(output_dir, f'som_output{width}x{height}_{num_iterations}.png')
-    save_som_image(som.weights,filepath, som, True, data)
+OUTPUT_DIR = "data/processed"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-if __name__ == "__main__":
-    main()
+class SOMRequest(BaseModel):
+    width: int = 10
+    height: int = 10
+    input_dim: int = 3
+    num_samples: int = 10
+    num_iterations: int = 100
+
+@app.post("/run-som")
+def run_som(params: SOMRequest):
+    # Generate input data
+    data = generate_random_data(params.num_samples, params.input_dim)
+
+    # Train SOM
+    som = SelfOrganisingMap(params.width, params.height, params.input_dim)
+    som.train(data, params.num_iterations)
+
+    return {"message": "SOM generated successfully.", "weights": som.weights.tolist()}
+
+# @app.get("/get-som-image")
+# def get_som_image(file_name: str = Query(..., description="Filename to retrieve from the output directory")):
+#     full_path = os.path.join(OUTPUT_DIR, file_name)
+#     if not os.path.exists(full_path):
+#         return {"error": "File not found."}
+#     return FileResponse(full_path, media_type="image/png", filename=file_name)
+
+## COmmand to run in terminal uvicorn src.main:app --reload --port 3000

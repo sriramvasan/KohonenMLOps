@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from som.som import SelfOrganisingMap
+from src.som.som import SelfOrganisingMap
 
 def save_som_image(weights: np.ndarray, filename: str, som_model : SelfOrganisingMap = None, show_bmu : bool= False, data: np.ndarray = None) -> None:
     """
