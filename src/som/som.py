@@ -6,7 +6,7 @@ class SelfOrganisingMap():
                  height: int,
                  input_dimension: int,
                  alpha: float = 0.1 ,
-                 sigma =None):
+                 sigma: float =None):
         """Initializes the Self Organising Map
         The weights are initialized randomly between 0 and 1. The map is a 2D grid of neurons.
 
@@ -15,8 +15,8 @@ class SelfOrganisingMap():
             width (int): Width of the map
             height (int): Height of the map
             input_dimension (int): dimension of the data
-            alpha (float, optional): _description_. Defaults to 0.1.
-            sigma (_type_, optional): _description_. Defaults to max(width , height)/2.
+            alpha (float, optional): The learning rate of the SOM . Defaults to 0.1.
+            sigma (float, optional): The radius of the neighbourhood for the neurons. Defaults to max(width , height)/2.
             
         example usage:
             ```python
@@ -84,11 +84,11 @@ class SelfOrganisingMap():
         """Trains the self organising map based on the input data and number of iterations 
 
         Args:
-            data (_type_): The input data used to train the SOM map.
-            num_iterations (_type_): The number of iterations for the training the map
+            data (np.ndarray): The input data used to train the SOM map.
+            num_iterations (int): The number of iterations for the training the map
 
         Returns:
-            _type_: Returns the trained weights of the neurons for the given metrics.
+            np.ndarray: Returns the trained weights of the neurons for the given metrics.
             
         Example usage:
             ```python
